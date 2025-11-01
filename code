@@ -1,0 +1,80 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <DHT.h>
+
+// ----- Pin Configuration -----
+#define DHTPIN 4          // DHT11 data pin connected to GPIO 4
+#define DHTTYPE DHT11
+#define MQ135PIN 34       // MQ135 analog output connected to GPIO 34
+
+// ----- Initialize Sensors -----
+DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // Change to 0x3F if needed
+
+void setup() {
+  Serial.begin(115200);
+
+  // Initialize LCD and I2C
+  Wire.begin(21, 22);
+  lcd.init();
+  lcd.backlight();
+
+  // Initialize DHT11
+  dht.begin();
+
+  // Startup message
+  lcd.setCursor(0, 0);
+  lcd.print("Air Quality");
+  lcd.setCursor(0, 1);
+  lcd.print("Initializing...");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+  int gasValue = analogRead(MQ135PIN);
+
+  // Check DHT read errors
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println("DHT read error!");
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Sensor Error");
+    delay(2000);
+    return;
+  }
+
+  // Print to Serial Monitor
+  Serial.print("Temp: ");
+  Serial.print(temperature);
+  Serial.print(" °C | Humidity: ");
+  Serial.print(humidity);
+  Serial.print(" % | Gas: ");
+  Serial.println(gasValue);
+
+  // Display on LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("T:");
+  lcd.print(temperature, 1);
+  lcd.print("C H:");
+  lcd.print(humidity, 0);
+  lcd.print("%");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Gas:");
+  lcd.print(gasValue);
+
+  // Display Air Quality Message
+  if (gasValue < 1000) {
+    lcd.print(" Fresh");
+  } else if (gasValue >= 1000 && gasValue < 2000) {
+    lcd.print(" Mod");
+  } else {
+    lcd.print(" Bad");
+  }
+
+  delay(2000);
+}
