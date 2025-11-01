@@ -1,0 +1,18 @@
+Project Summary
+
+The Air Quality Monitor is an IoT-based system designed to measure and display real-time air quality data using an ESP32 microcontroller. 
+It uses sensors like DHT11 for temperature and humidity and MQ135 for detecting harmful gases such as CO₂ and other volatile compounds. 
+The readings are displayed on an LCD screen and transmitted to the Blynk IoT platform, allowing users to monitor environmental conditions remotely through their smartphone.
+
+Purpose of the Project
+
+The main purpose of the Air Quality Monitor is to create a low-cost, portable, and reliable system that helps users understand and track air pollution levels in their surroundings.
+It aims to:
+
+Raise awareness about environmental health and pollution.
+
+Enable users to take timely actions when air quality drops.
+
+Provide real-time insights for improving indoor or outdoor air quality.
+
+Serve as a learning project for IoT, sensors, and environmental monitoring systems.
